@@ -66,13 +66,7 @@ std::string Request::http_image_post(const std::string &url,
                                      const std::string &filename)
 {
     // debug
-    //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-    // url
-    curl_easy_setopt(curl.get(), CURLOPT_URL, url.c_str());
-
-    // user agent
-    curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, "curl 7.64.1 (x86_64-pc-linux-gnu) libcurl/7.64.1");
+    //curl_easy_setopt(curl.get(), CURLOPT_VERBOSE, 1L);
 
     // headers
     struct curl_slist *slist = NULL;
@@ -81,6 +75,12 @@ std::string Request::http_image_post(const std::string &url,
         slist = curl_slist_append(slist, header.c_str());
     }
     curl_easy_setopt(curl.get(), CURLOPT_HTTPHEADER, slist);
+
+    // url
+    curl_easy_setopt(curl.get(), CURLOPT_URL, url.c_str());
+
+    // user agent
+    curl_easy_setopt(curl.get(), CURLOPT_USERAGENT, "curl 7.64.1 (x86_64-pc-linux-gnu) libcurl/7.64.1");
 
     // callback
     std::string callback;
@@ -98,8 +98,11 @@ std::string Request::http_image_post(const std::string &url,
     if(res != CURLE_OK)
     {
         std::cout << "Something happened in http_post\n";
+        curl_mime_free(multipart);
         throw Request_exception();
     }
+
+    curl_mime_free(multipart);
 
     return callback;
 }

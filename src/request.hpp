@@ -73,5 +73,3 @@ class Request
     std::unique_ptr<CURL, CURL_cleanup> curl;
 };
 } // namespace request
-
-#endif // REQUEST_HPP_
